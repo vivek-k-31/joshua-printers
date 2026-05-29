@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joshua Printers – Bangalore</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --gold: #c9922a;
+    --gold-light: #e8b84b;
+    --red: #c0392b;
+    --cream: #faf6ee;
+    --mid: #7a6f5e;
+    --whatsapp: #25D366;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCROLL PROGRESS BAR ─── */
+  #scroll-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px;
+    background: var(--gold);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s linear;
+  }
+
+  /* ─── NOISE TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(245, 240, 232, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(201,146,42,0.25);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 24px rgba(13,13,13,0.08); }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.25s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+  .nav-cta {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    background: var(--gold);
+    padding: 0.55rem 1.3rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: var(--ink); color: var(--cream); }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none; border: none;
+    z-index: 600;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--ink);
+    transition: transform 0.3s, opacity 0.3s;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--cream);
+    z-index: 450;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .mobile-menu.open { display: flex; opacity: 1; transform: translateY(0); }
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-menu .m-cta {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0.8rem 2.5rem;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 72px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero-left {
+    padding: 6rem 3rem 4rem 5rem;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 1.4rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 28px; height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 7vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin-bottom: 2rem;
+  }
+  .hero-title em {
+    color: var(--gold);
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--mid);
+    max-width: 380px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    background: var(--ink);
+    color: var(--cream);
+    text-decoration: none;
+    padding: 1rem 2.2rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: background 0.25s, color 0.25s;
+  }
+  .hero-cta:hover { background: var(--gold); color: var(--ink); }
+  .hero-cta svg { width: 16px; transition: transform 0.2s; }
+  .hero-cta:hover svg { transform: translateX(4px); }
+
+  .hero-cta-wa {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: transparent;
+    border: 1.5px solid rgba(13,13,13,0.2);
+    color: var(--ink);
+    text-decoration: none;
+    padding: 1rem 1.8rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: background 0.25s, border-color 0.25s, color 0.25s;
+  }
+  .hero-cta-wa:hover { background: var(--whatsapp); color: #fff; border-color: var(--whatsapp); }
+  .hero-cta-wa svg { width: 16px; }
+
+  .hero-right {
+    position: relative;
+    background: var(--ink);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .press-bg {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    opacity: 0.08;
+  }
+  .press-row {
+    display: flex; gap: 0;
+    white-space: nowrap;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: #fff;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    padding: 0.2rem 0;
+    animation: marquee 18s linear infinite;
+  }
+  .press-row:nth-child(even) { animation-direction: reverse; animation-duration: 22s; }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .hero-badge {
+    position: relative; z-index: 2;
+    text-align: center;
+    color: #fff;
+  }
+  .badge-ring {
+    width: 260px; height: 260px;
+    border: 2px solid rgba(201,146,42,0.5);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    animation: spin-slow 30s linear infinite;
+  }
+  .badge-ring::before {
+    content: '';
+    position: absolute; inset: 10px;
+    border: 1px solid rgba(201,146,42,0.25);
+    border-radius: 50%;
+  }
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+  .badge-inner {
+    animation: spin-slow 30s linear infinite reverse;
+    text-align: center; padding: 1.5rem;
+  }
+  .badge-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .badge-txt {
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* ─── TICKER ─── */
+  .ticker-bar {
+    background: var(--gold);
+    padding: 0.7rem 0;
+    overflow: hidden;
+    display: flex;
+  }
+  .ticker-content {
+    display: flex; gap: 3rem;
+    white-space: nowrap;
+    animation: ticker 20s linear infinite;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+  }
+  .ticker-content span::before { content: '◆ '; }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ─── SECTIONS ─── */
+  .section { padding: 6rem 5rem; }
+
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 3rem;
+  }
+  .section-title em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* ─── SERVICES ─── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(13,13,13,0.1);
+    border: 1px solid rgba(13,13,13,0.1);
+  }
+
+  .service-card {
+    background: var(--cream);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .service-card:hover { background: var(--paper); }
+  .service-card:hover::after { transform: scaleX(1); }
+
+  .service-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+  .service-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    margin-bottom: 0.7rem;
+  }
+  .service-desc { font-size: 0.85rem; line-height: 1.7; color: var(--mid); font-weight: 300; }
+
+  /* ─── WHY US ─── */
+  .why-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .why-left {
+    padding: 6rem 4rem 6rem 5rem;
+    border-right: 1px solid rgba(255,255,255,0.07);
+  }
+  .why-left .section-label { color: var(--gold-light); }
+  .why-left .section-title { color: var(--cream); margin-bottom: 1.5rem; }
+  .why-left .section-title em { color: var(--gold-light); }
+  .why-desc { font-size: 0.95rem; line-height: 1.85; color: rgba(250,246,238,0.65); font-weight: 300; }
+
+  .why-right {
+    padding: 6rem 4rem;
+    display: flex; flex-direction: column; justify-content: center; gap: 2rem;
+  }
+  .why-item {
+    display: flex; align-items: flex-start; gap: 1.2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .why-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .why-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 3rem;
+  }
+  .why-text h4 {
+    font-size: 0.9rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 0.4rem; color: var(--cream);
+  }
+  .why-text p { font-size: 0.82rem; line-height: 1.7; color: rgba(250,246,238,0.5); font-weight: 300; }
+
+  /* ─── STATS ─── */
+  .stats-bar {
+    background: var(--gold);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+  }
+  .stat {
+    padding: 2.5rem 1rem;
+    border-right: 1px solid rgba(13,13,13,0.15);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--ink);
+    line-height: 1;
+    display: block;
+  }
+  .stat-lbl { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(13,13,13,0.65); font-weight: 500; }
+
+  /* ─── CONTACT ─── */
+  .contact-section {
+    padding: 6rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-left .section-title { margin-bottom: 1rem; }
+  .contact-sub { font-size: 0.9rem; line-height: 1.75; color: var(--mid); font-weight: 300; margin-bottom: 2.5rem; }
+
+  .contact-detail { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+  .detail-icon {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .detail-text { font-size: 0.87rem; line-height: 1.65; color: var(--mid); }
+  .detail-text strong { display: block; color: var(--ink); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.2rem; }
+  .detail-text a { color: var(--gold); text-decoration: none; }
+  .detail-text a:hover { text-decoration: underline; }
+
+  /* Form */
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field label {
+    display: block;
+    font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 0.5rem; font-weight: 500;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--paper);
+    border: 1px solid rgba(13,13,13,0.15);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: none;
+    appearance: none;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,146,42,0.12);
+  }
+
+  .form-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .submit-btn {
+    background: var(--ink); color: var(--cream);
+    border: none; padding: 1rem 2.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.18em;
+    text-transform: uppercase; font-weight: 500;
+    cursor: pointer; transition: background 0.25s;
+  }
+  .submit-btn:hover { background: var(--gold); color: var(--ink); }
+
+  .wa-btn {
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid rgba(13,13,13,0.2);
+    padding: 1rem 1.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 500;
+    cursor: pointer; transition: all 0.25s;
+    display: flex; align-items: center; gap: 0.5rem;
+    text-decoration: none;
+  }
+  .wa-btn:hover { background: var(--whatsapp); color: #fff; border-color: var(--whatsapp); }
+
+  /* ─── WHATSAPP FLOAT ─── */
+  .wa-float {
+    position: fixed; bottom: 2rem; right: 2rem;
+    width: 56px; height: 56px;
+    background: var(--whatsapp);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 400;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    animation: wa-pulse 2.5s ease-in-out infinite;
+  }
+  .wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.55); animation: none; }
+  .wa-float svg { width: 28px; height: 28px; fill: #fff; }
+  @keyframes wa-pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+    50% { box-shadow: 0 4px 30px rgba(37,211,102,0.7); }
+  }
+  .wa-tooltip {
+    position: absolute; right: 68px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--ink); color: var(--cream);
+    font-size: 0.75rem; letter-spacing: 0.06em;
+    padding: 0.4rem 0.9rem;
+    white-space: nowrap;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .wa-float:hover .wa-tooltip { opacity: 1; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink);
+    color: rgba(250,246,238,0.5);
+    text-align: center;
+    padding: 2rem 5rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  footer strong { color: var(--gold); }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; color: var(--cream);
+    letter-spacing: 0.12em; text-decoration: none;
+  }
+  .footer-logo span { color: var(--gold); }
+
+  /* ─── ANIMATIONS ─── */
+  .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-right { min-height: 60vw; }
+    .hero-left { padding: 5rem 1.5rem 2rem; }
+
+    .section { padding: 4rem 1.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .why-section { grid-template-columns: 1fr; }
+    .why-left { padding: 4rem 1.5rem; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .why-right { padding: 2rem 1.5rem 4rem; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(2) { border-right: none; }
+    .contact-section { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; padding: 1.5rem; text-align: center; }
+
+    .badge-ring { width: 180px; height: 180px; }
+    .badge-num { font-size: 3.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 3.5rem; }
+    .form-btns { flex-direction: column; }
+    .wa-float { bottom: 1.2rem; right: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-bar"></div>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/919108009876?text=Hi%2C%20I%20need%20a%20printing%20quote" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <span class="wa-tooltip">Chat on WhatsApp</span>
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#why" onclick="closeMobile()">Why Us</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a href="https://wa.me/919108009876" target="_blank" class="m-cta">WhatsApp Us</a>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">Joshua<span>.</span>Printers</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:Joshuaprinters09@gmail.com" class="nav-cta">Get Quote</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Est. in Bangalore · Shivajinagar</p>
+    <h1 class="hero-title">Print<br><em>With</em><br>Precision</h1>
+    <p class="hero-sub">From business cards to large-format banners — Joshua Printers delivers crisp, vibrant, professional printing to Bangalore's businesses and creators.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="hero-cta">
+        Request a Quote
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://wa.me/919108009876?text=Hi%2C%20I%20need%20a%20printing%20quote" target="_blank" class="hero-cta-wa">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="press-bg">
+      <div class="press-row">PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;</div>
+      <div class="press-row">JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;</div>
+      <div class="press-row">OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;</div>
+      <div class="press-row">PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;</div>
+      <div class="press-row">JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;</div>
+      <div class="press-row">OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;</div>
+      <div class="press-row">PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;</div>
+      <div class="press-row">JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;</div>
+      <div class="press-row">OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;</div>
+      <div class="press-row">PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;PRINT&nbsp;&nbsp;DESIGN&nbsp;&nbsp;PRESS&nbsp;&nbsp;COLOR&nbsp;&nbsp;INK&nbsp;&nbsp;QUALITY&nbsp;&nbsp;</div>
+      <div class="press-row">JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;JOSHUA&nbsp;&nbsp;PRINTERS&nbsp;&nbsp;BANGALORE&nbsp;&nbsp;560001&nbsp;&nbsp;</div>
+      <div class="press-row">OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;OFFSET&nbsp;&nbsp;DIGITAL&nbsp;&nbsp;FLEX&nbsp;&nbsp;BANNER&nbsp;&nbsp;BROCHURE&nbsp;&nbsp;</div>
+    </div>
+    <div class="hero-badge">
+      <div class="badge-ring">
+        <div class="badge-inner">
+          <span class="badge-num">15+</span>
+          <p class="badge-txt">Years of<br>Excellence</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-content">
+    <span>Business Cards</span><span>Flex Banners</span><span>Brochures</span><span>Letterheads</span><span>Visiting Cards</span><span>Pamphlets</span><span>Wedding Cards</span><span>Posters</span><span>Stickers</span><span>Calendars</span>
+    <span>Business Cards</span><span>Flex Banners</span><span>Brochures</span><span>Letterheads</span><span>Visiting Cards</span><span>Pamphlets</span><span>Wedding Cards</span><span>Posters</span><span>Stickers</span><span>Calendars</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <p class="section-label fade-up">What We Offer</p>
+  <h2 class="section-title fade-up">Our <em>Services</em></h2>
+  <div class="services-grid">
+    <div class="service-card fade-up">
+      <span class="service-icon">🖨️</span>
+      <h3 class="service-name">Digital Printing</h3>
+      <p class="service-desc">High-quality digital prints for short runs — sharp, fast, and cost-effective. Perfect for flyers, brochures, and presentations.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">📋</span>
+      <h3 class="service-name">Offset Printing</h3>
+      <p class="service-desc">Consistent and economical for large volumes. Ideal for catalogues, magazines, and bulk stationery orders.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">🖼️</span>
+      <h3 class="service-name">Flex & Banner</h3>
+      <p class="service-desc">Eye-catching large format flex banners, hoardings, and vinyl prints for your storefront, events, and promotions.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">📇</span>
+      <h3 class="service-name">Visiting Cards</h3>
+      <p class="service-desc">Premium business cards in matte, gloss, spot UV, and embossed finishes that leave a lasting first impression.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">💌</span>
+      <h3 class="service-name">Wedding Cards</h3>
+      <p class="service-desc">Elegant wedding invitations and event stationery crafted with care — traditional designs to modern minimalism.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">📦</span>
+      <h3 class="service-name">Stationery & More</h3>
+      <p class="service-desc">Letterheads, envelopes, notepads, calendars, diaries, and complete corporate stationery packages.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-section" id="why">
+  <div class="why-left">
+    <p class="section-label">Why Choose Us</p>
+    <h2 class="section-title">Built on <em>Trust</em> &amp; Quality</h2>
+    <p class="why-desc">Joshua Printers has been serving Bangalore's businesses, institutions, and individuals for over a decade. Located in the heart of Shivajinagar, we combine traditional printing expertise with modern technology to deliver results that exceed expectations — every single time.</p>
+  </div>
+  <div class="why-right">
+    <div class="why-item">
+      <span class="why-num">01</span>
+      <div class="why-text">
+        <h4>Fast Turnaround</h4>
+        <p>Same-day and next-day delivery available for urgent orders. We respect your deadlines.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <span class="why-num">02</span>
+      <div class="why-text">
+        <h4>Premium Materials</h4>
+        <p>We use top-grade papers, inks, and laminates to ensure durability and vibrant colour reproduction.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <span class="why-num">03</span>
+      <div class="why-text">
+        <h4>Affordable Pricing</h4>
+        <p>Transparent, competitive rates with no hidden charges. Quality printing doesn't have to break the bank.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <span class="why-num">04</span>
+      <div class="why-text">
+        <h4>Design Support</h4>
+        <p>Our in-house team can help refine or create your artwork — print-ready, every time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-num" data-target="15" data-suffix="+">0</span>
+    <span class="stat-lbl">Years in Business</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" data-target="5000" data-suffix="+">0</span>
+    <span class="stat-lbl">Happy Clients</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" data-target="50" data-suffix="+">0</span>
+    <span class="stat-lbl">Print Services</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" data-target="100" data-suffix="%">0</span>
+    <span class="stat-lbl">Quality Guaranteed</span>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-left">
+    <p class="section-label fade-up">Get In Touch</p>
+    <h2 class="section-title fade-up">Let's <em>Print</em><br>Together</h2>
+    <p class="contact-sub fade-up">Walk in, call, or drop us a message. We're here to help you bring your print ideas to life — big or small.</p>
+
+    <div class="contact-detail fade-up">
+      <div class="detail-icon">📍</div>
+      <div class="detail-text">
+        <strong>Address</strong>
+        59 Nazeer Complex, Lubbay Masjid Street,<br>Shivajinagar, Bangalore – 560 001
+      </div>
+    </div>
+
+    <div class="contact-detail fade-up">
+      <div class="detail-icon">📞</div>
+      <div class="detail-text">
+        <strong>Phone / WhatsApp</strong>
+        <a href="tel:+919108009876">+91 91080 09876</a>
+      </div>
+    </div>
+
+    <div class="contact-detail fade-up">
+      <div class="detail-icon">✉️</div>
+      <div class="detail-text">
+        <strong>Email</strong>
+        <a href="mailto:Joshuaprinters09@gmail.com">Joshuaprinters09@gmail.com</a>
+      </div>
+    </div>
+
+    <div class="contact-detail fade-up">
+      <div class="detail-icon">🕐</div>
+      <div class="detail-text">
+        <strong>Working Hours</strong>
+        Mon – Sat: 9:00 AM – 7:00 PM<br>Sunday: Closed
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="field">
+          <label>Your Name</label>
+          <input type="text" id="fname" placeholder="Full Name" required>
+        </div>
+        <div class="field">
+          <label>Phone / Email</label>
+          <input type="text" id="fcontact" placeholder="Contact Info" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>Service Required</label>
+        <select id="fservice">
+          <option>Business Cards / Visiting Cards</option>
+          <option>Flex Banner / Hoarding</option>
+          <option>Brochure / Pamphlet</option>
+          <option>Wedding Cards</option>
+          <option>Offset Printing (Bulk)</option>
+          <option>Stationery Package</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Message / Requirements</label>
+        <textarea rows="4" id="fmsg" placeholder="Describe your print requirements, quantity, size, etc."></textarea>
+      </div>
+      <div class="form-btns">
+        <button type="submit" class="submit-btn">Send Enquiry →</button>
+        <a id="waLink" href="#" target="_blank" class="wa-btn">
+          <svg viewBox="0 0 24 24" width="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Send via WhatsApp
+        </a>
+      </div>
+      <p id="form-msg" style="font-size:0.82rem;color:var(--gold);display:none;margin-top:0.5rem;">✔ Thank you! We'll get back to you shortly.</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Joshua<span>.</span>Printers</a>
+  <p>© 2025 Joshua Printers · Shivajinagar, Bangalore – 560 001</p>
+  <p>Made with <strong>♥</strong> in Bangalore</p>
+</footer>
+
+<script>
+  // ── SCROLL PROGRESS ──
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('scroll-bar').style.width = scrolled + '%';
+  });
+
+  // ── NAV SCROLL SHADOW ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── MOBILE MENU ──
+  function toggleMobile() {
+    const menu = document.getElementById('mobileMenu');
+    const ham = document.getElementById('hamburger');
+    const isOpen = menu.classList.contains('open');
+    if (isOpen) {
+      menu.classList.remove('open');
+      ham.classList.remove('open');
+      document.body.style.overflow = '';
+    } else {
+      menu.classList.add('open');
+      ham.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeMobile() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── ACTIVE NAV ON SCROLL ──
+  const sections = ['services','why','contact'];
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 120) current = id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // ── FADE UP OBSERVER ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ── STAT COUNTER ANIMATION ──
+  function animateCount(el) {
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1800;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target) + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('[data-target]').forEach(animateCount);
+        statObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  statObserver.observe(document.querySelector('.stats-bar'));
+
+  // ── WHATSAPP FORM LINK ──
+  function buildWaLink() {
+    const name = document.getElementById('fname').value || '';
+    const contact = document.getElementById('fcontact').value || '';
+    const service = document.getElementById('fservice').value || '';
+    const msg = document.getElementById('fmsg').value || '';
+    const text = encodeURIComponent(
+      `Hi Joshua Printers!\n\nName: ${name}\nContact: ${contact}\nService: ${service}\nMessage: ${msg}`
+    );
+    document.getElementById('waLink').href = `https://wa.me/919108009876?text=${text}`;
+  }
+  ['fname','fcontact','fservice','fmsg'].forEach(id => {
+    document.getElementById(id).addEventListener('input', buildWaLink);
+    document.getElementById(id).addEventListener('change', buildWaLink);
+  });
+  buildWaLink();
+
+  // ── FORM SUBMIT ──
+  function handleSubmit(e) {
+    e.preventDefault();
+    const msg = document.getElementById('form-msg');
+    msg.style.display = 'block';
+    e.target.reset();
+    buildWaLink();
+    setTimeout(() => msg.style.display = 'none', 5000);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Joshua Printers</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d; --paper: #f5f0e8; --gold: #c9922a;
+    --cream: #faf6ee; --mid: #7a6f5e; --red: #c0392b;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+
+  header {
+    background: var(--ink); padding: 1.2rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: 'Bebas Neue'; font-size: 1.5rem; color: #fff; letter-spacing: 0.12em; }
+  .logo span { color: var(--gold); }
+  .badge { background: var(--gold); color: var(--ink); font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase; padding: 0.35rem 0.9rem; font-weight: 600; }
+
+  .container { max-width: 1100px; margin: 3rem auto; padding: 0 2rem; }
+
+  h1 { font-family: 'Bebas Neue'; font-size: 2.5rem; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+  .subtitle { font-size: 0.85rem; color: var(--mid); margin-bottom: 2rem; }
+
+  .count-bar {
+    background: var(--gold); display: inline-block;
+    padding: 0.5rem 1.2rem; font-size: 0.78rem;
+    font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  table { width: 100%; border-collapse: collapse; background: #fff; }
+  thead { background: var(--ink); color: #fff; }
+  thead th {
+    padding: 0.9rem 1rem; text-align: left;
+    font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+  }
+  tbody tr { border-bottom: 1px solid rgba(13,13,13,0.08); transition: background 0.2s; }
+  tbody tr:hover { background: var(--paper); }
+  tbody td { padding: 0.9rem 1rem; font-size: 0.85rem; color: var(--ink); vertical-align: top; }
+  tbody td.meta { color: var(--mid); font-size: 0.78rem; }
+
+  .service-tag {
+    background: rgba(201,146,42,0.12); color: var(--gold);
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.25rem 0.6rem; font-weight: 600; display: inline-block;
+  }
+
+  .del-form { display: inline; }
+  .del-btn {
+    background: none; border: 1px solid rgba(192,57,43,0.3);
+    color: var(--red); font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 0.3rem 0.7rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .del-btn:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+  .empty { text-align: center; padding: 4rem; color: var(--mid); font-size: 0.9rem; }
+
+  a.back { display: inline-block; margin-top: 2rem; font-size: 0.78rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--mid);
+    text-decoration: none; border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+
+  @media (max-width: 700px) {
+    table { font-size: 0.78rem; }
+    .container { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Joshua<span>.</span>Printers</div>
+  <span class="badge">Admin Panel</span>
+</header>
+
+<div class="container">
+  <h1>Enquiries</h1>
+  <p class="subtitle">All customer enquiries submitted via the website</p>
+
+  <div class="count-bar">{{ enquiries|length }} Enquir{{ 'y' if enquiries|length == 1 else 'ies' }} Received</div>
+
+  {% if enquiries %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Service</th>
+        <th>Message</th>
+        <th>Date & Time</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in enquiries %}
+      <tr>
+        <td class="meta">{{ e['id'] }}</td>
+        <td><strong>{{ e['name'] }}</strong></td>
+        <td class="meta">{{ e['contact'] }}</td>
+        <td><span class="service-tag">{{ e['service'] }}</span></td>
+        <td class="meta">{{ e['message'] or '—' }}</td>
+        <td class="meta">{{ e['submitted_at'] }}</td>
+        <td>
+          <form class="del-form" method="POST" action="/admin/delete/{{ e['id'] }}"
+            onsubmit="return confirm('Delete this enquiry?')">
+            <button class="del-btn" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">📭 No enquiries yet. They'll show up here once customers submit the form.</div>
+  {% endif %}
+
+  <a class="back" href="/">← Back to Website</a>
+</div>
+
+</body>
+</html>
